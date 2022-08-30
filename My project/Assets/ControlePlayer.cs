@@ -23,11 +23,14 @@ public class ControlePlayer : MonoBehaviour
     Animator animator;
     Rigidbody2D rigidbody;
 
+    Vector3 checkpoint;
+
     // Start is called before the first frame update
     void Start()
     {
         animator = GetComponent<Animator>();
         rigidbody = GetComponent<Rigidbody2D>();
+        checkpoint = transform.position;
     }
 
     // Update is called once per frame
@@ -55,9 +58,16 @@ public class ControlePlayer : MonoBehaviour
         Debug.Log(rigidbody.velocity.y);
         if (hit != null && (rigidbody.velocity.y <= 0.5f || puloVezes == 0))
         {
-            noChao = true;
-            animator.SetBool("JUMP", false);
-            puloVezes = 0;
+            if (hit.CompareTag("CHAO"))
+            {
+                noChao = true;
+                animator.SetBool("JUMP", false);
+                puloVezes = 0;
+            } else if (hit.CompareTag("ADVERSARIO"))
+            {
+                Destroy(hit.gameObject);
+            }
+            
         } else
         {
             noChao = false;
@@ -75,11 +85,32 @@ public class ControlePlayer : MonoBehaviour
     {
         if (context.ReadValue<float>() == 1 && puloVezes <= puloMax)
         {
+            //GetComponent<Rigidbody2D>().velocity = new Vector3(0.001f, 0.001f, 0.001f);
+            rigidbody.velocity = Vector3.zero;
             rigidbody.AddForce(new Vector2(0, forcaPulo), ForceMode2D.Impulse);
             animator.SetBool("JUMP", true);
             //GetComponent<Animator>().SetBool("GROUNDED", false);
             noChao = false;
             puloVezes += 1;
+        }
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        if (collision.gameObject.CompareTag("ADVERSARIO"))
+        {
+            transform.position = checkpoint;
+        }
+        
+    }
+
+    private void OnTriggerEnter2D(Collider2D collision)
+    {
+        if (collision.gameObject.CompareTag("CHECKPOINT"))
+        {
+            checkpoint = collision.transform.position;
+            collision.gameObject.GetComponent<Animator>().SetBool("CHECK", true);
+            Destroy(collision.gameObject.GetComponent<BoxCollider2D>());
         }
     }
 

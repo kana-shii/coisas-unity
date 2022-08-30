@@ -13,11 +13,16 @@ public class ControleEnemy : MonoBehaviour
     [SerializeField]
     float alturaRaio, distanciaRaio;
 
+    
+
     // Start is called before the first frame update
     void Start()
     {
         rigidbody = GetComponent<Rigidbody2D>();
         animator = GetComponent<Animator>();
+        animator.SetBool("JUMP", false);
+        animator.SetBool("GROUNDED", true);
+        
     }
 
     // Update is called once per frame
@@ -35,7 +40,12 @@ public class ControleEnemy : MonoBehaviour
                 transform.localScale = new Vector3(1, 1, 1);
             }
             
-            rigidbody.velocity = new Vector2(transform.localScale.x, 0);
+            rigidbody.velocity = new Vector2(transform.localScale.x * 5, 0);
+            animator.SetBool("WALKING", true);
+        } else
+        {
+            animator.SetBool("WALKING", false);
+            rigidbody.velocity = new Vector2(0, rigidbody.velocity.y);
         }
     }
 
@@ -47,4 +57,6 @@ public class ControleEnemy : MonoBehaviour
         
         Gizmos.DrawLine(posInicial, posFinal);
     }
+
+    
 }
