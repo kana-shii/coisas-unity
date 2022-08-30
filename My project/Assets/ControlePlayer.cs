@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 using static UnityEngine.InputSystem.InputAction;
 
 public class ControlePlayer : MonoBehaviour
@@ -22,6 +23,9 @@ public class ControlePlayer : MonoBehaviour
 
     Animator animator;
     Rigidbody2D rigidbody;
+
+    [SerializeField]
+    Image hpbar;
 
     Vector3 checkpoint;
 
@@ -66,6 +70,7 @@ public class ControlePlayer : MonoBehaviour
             } else if (hit.CompareTag("ADVERSARIO"))
             {
                 Destroy(hit.gameObject);
+                hpbar.fillAmount += 0.5f;
             }
             
         } else
@@ -100,6 +105,11 @@ public class ControlePlayer : MonoBehaviour
         if (collision.gameObject.CompareTag("ADVERSARIO"))
         {
             transform.position = checkpoint;
+            hpbar.fillAmount -= 0.2f;
+            if(hpbar.fillAmount <= 0)
+            {
+
+            }
         }
         
     }
