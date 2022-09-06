@@ -37,6 +37,21 @@ public class ControlePlayer : MonoBehaviour
         checkpoint = transform.position;
     }
 
+    private void Awake()
+    {
+        GameObject[] gObjetos = GameObject.FindGameObjectsWithTag("PRINCIPAL");
+        if(gObjetos.Length > 1) 
+        {
+            Destroy(gObjetos[gObjetos.Length - 1]);
+            {
+
+
+
+                Destroy(gameObject.transform.parent);
+            }
+        }
+    }
+
     // Update is called once per frame
     void Update()
     {
